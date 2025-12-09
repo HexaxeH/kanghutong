@@ -8,10 +8,35 @@
     }
 },
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		// {
+		// 	"path": "pages/index/index",
+		// 	"style": {
+		// 		"navigationBarTitleText": "uni-app"
+		// 	}
+		// }
+		// ,
 		{
-			"path": "pages/index/index",
+			"path": "pages/auth/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "登录",
+				"navigationBarBackgroundColor": "#F8F8F8",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/auth/phone",
+			"style": {
+				"navigationBarTitleText": "手机号登录",
+				"navigationBarBackgroundColor": "#F8F8F8",
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path": "pages/auth/verify",
+			"style": {
+				"navigationBarTitleText": "输入验证码",
+				"navigationBarBackgroundColor": "#F8F8F8",
+				"navigationBarTextStyle": "black"
 			}
 		}
 	],
