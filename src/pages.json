@@ -1,24 +1,102 @@
 {
-	// 组件自动导入
   "easycom": {
     "autoscan": true,
     "custom": {
-      // uni-ui 规则如下配置  
-      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue" 
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
     }
-},
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+  },
+	"pages": [
+    {
+      "path": "pages/login/Login",
+      "style": {
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#FFFFFF"
+      }
+    },
 		{
-			"path": "pages/index/index",
+			"path": "pages/guard/Guard",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "守护",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "transparent",
+				"navigationBarTextStyle": "white",
+				"app-plus": {
+					"titleNView": {
+						"type": "float",
+						"backgroundColor": "transparent",
+						"titleAlign": "center",
+						"buttons": [],
+						"backButton": {
+							"visible": false
+						}
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/reminder/Reminder",
+			"style": {
+				"navigationBarTitleText": "提醒",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "transparent",
+				"navigationBarTextStyle": "white",
+				"app-plus": {
+					"titleNView": {
+						"type": "float",
+						"backgroundColor": "transparent",
+						"titleAlign": "center",
+						"buttons": [],
+						"backButton": {
+							"visible": false
+						}
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/mine/Mine",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/mine/FamilyDetail",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
 			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#60B09E",
+		"selectedColor": "#999999",
+		"backgroundColor": "#fff",
+		"borderStyle": "white",
+		"list": [
+			{
+			"pagePath": "pages/guard/Guard",
+			"text": "守护",
+			"iconPath": "/static/guard.png",
+			"selectedIconPath": "/static/guard-checked.png"
+		},
+			{
+			"pagePath": "pages/reminder/Reminder",
+			"text": "提醒",
+			"iconPath": "/static/reminder.png",
+			"selectedIconPath": "/static/reminder-checked.png"
+		},
+			{
+			"pagePath": "pages/mine/Mine",
+			"text": "我的",
+			"iconPath": "/static/mine.png",
+			"selectedIconPath": "/static/mine-checked.png"
+		}
+		]
 	}
 }

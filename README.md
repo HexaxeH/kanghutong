@@ -77,9 +77,43 @@ src/
 ├── App.vue                 # 应用入口组件
 ├── main.js                 # 应用入口文件
 ├── manifest.json           # 应用配置文件
-├── pages.json             # 页面路由配置
-├── uni.scss               # 全局样式文件
-└── pages/                 # 页面文件夹
-    └── index/            # 首页
-        └── index.vue    # 首页组件
+├── pages.json              # 页面路由配置
+├── uni.scss                # 全局样式文件
+├── pages/                  # 页面文件夹
+│   ├── index/              # 首页
+│   │   └── index.vue       # 首页组件
+│   ├── reminder/           # 提醒页面
+│   │   └── reminder.vue    # 提醒页面组件
+│   ├── family/             # 我的家人页面
+│   │   └── family.vue      # 我的家人页面组件
+│   └── family-detail/      # 亲属详情页面
+│       └── family-detail.vue # 亲属详情页面组件
+├── components/             # 组件文件夹
+│   ├── add-family-dialog.vue    # 添加家人弹窗组件
+│   ├── relation-select-dialog.vue # 选择亲属关系弹窗组件
+│   ├── add-reminder-dialog.vue  # 添加提醒弹窗组件
+│   └── page-header.vue          # 通用页面标题组件
+└── utils/                  # 工具函数
+    └── router.js           # 路由管理工具
 ```
+
+## 功能模块
+
+### 首页
+- 展示老人列表信息
+- 提供一键定位功能
+
+### 提醒管理
+- 查看所有提醒事项
+- 添加新的提醒（用药、事件等）
+- 设置提醒时间和频率
+
+### 家人管理
+- 查看和管理家人列表
+- 添加新的家人信息
+- 设置亲属关系
+
+### 亲属详情
+- 查看老人详细信息
+- 管理老人的联系人信息
+- 录入老人健康信息
