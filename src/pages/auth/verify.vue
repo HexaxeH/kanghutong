@@ -21,6 +21,7 @@
     <view class="agreements">
       <text>注册登录即代表同意</text>
       <text class="link">手机号码认证服务条款</text>
+      <br></br>
       <text>以及</text>
       <text class="link">服务使用协议</text>
       <text>和</text>
@@ -69,8 +70,6 @@ onLoad((query) => {
   width: 86%;
   margin: -60rpx auto 0;
   background: #ffffff;
-  border-radius: 24rpx;
-  box-shadow: 0 16rpx 36rpx rgba(0,0,0,0.08);
   padding: 40rpx;
   display: flex;
   flex-direction: column;

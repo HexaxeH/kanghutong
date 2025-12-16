@@ -22,6 +22,7 @@
       <text>注册登录即代表同意</text>
       <text class="link">手机号码认证服务条款</text>
       <text>以及</text>
+      <br>  </br>
       <text class="link">服务使用协议</text>
       <text>和</text>
       <text class="link">隐私政策</text>
@@ -42,7 +43,16 @@ function onMobileInput(e) {
 }
 
 function sendCode() {
-  uni.navigateTo({ url: `/pages/auth/verify?mobile=${mobile.value}&role=${role.value}` })
+  uni.navigateTo({
+    url: `/pages/auth/verify?mobile=${mobile.value}&role=${role.value}`,
+    fail: (err) => {
+      console.error('跳转失败', err)
+      uni.showToast({
+        title: '跳转失败: ' + err.errMsg,
+        icon: 'none'
+      })
+    }
+  })
 }
 
 onLoad((query) => {

@@ -58,9 +58,6 @@
         "permission": {
             "scope.userLocation": {
                 "desc": "您的位置将用于查找附近的医院和药店"
-            },
-            "scope.record": {
-                "desc": "您的语音将用于与健康助手对话"
             }
         },
         "requiredPrivateInfos": [

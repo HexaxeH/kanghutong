@@ -64,6 +64,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 import { AMapLite } from '@/libs/amap-lite.js'
 
 // 状态变量
@@ -75,7 +76,14 @@ const currentCategory = ref('')
 const poiList = ref([])
 
 const categories = ['医院', '药店', '公园', '超市', '公厕']
-const myAmapFun = new AMapLite({ key: '4d4e76a5e1b19a9bae4cbc37d3204dc2' });
+const myAmapFun = new AMapLite({ key: '1923856a15f02cf1889d5018af772fae' });
+
+// 页面参数
+let pageOptions = {}
+
+onLoad((options) => {
+  pageOptions = options || {}
+})
 
 // 初始化
 onMounted(() => {
@@ -85,20 +93,44 @@ onMounted(() => {
     success: function (res) {
       latitude.value = res.latitude
       longitude.value = res.longitude
-      // 默认搜索医院
-      searchCategory('医院')
+      
+      handleInitSearch()
     },
     fail: function (err) {
-      console.error('定位失败', err)
-      uni.showToast({
-        title: '获取位置失败，请检查权限',
-        icon: 'none'
-      })
-      // 定位失败也尝试搜索（使用默认坐标或上次坐标）
-      searchCategory('医院')
+      console.error('定位失败，使用默认位置', err)
+      // 失败时默认使用北京天安门坐标
+      latitude.value = 39.9088
+      longitude.value = 116.3975
+      
+      // 仅在非隐私协议错误时提示
+      if (err?.errMsg && !err.errMsg.includes('privacy')) {
+        uni.showToast({
+          title: '定位失败，已使用默认位置',
+          icon: 'none'
+        })
+      }
+      
+      handleInitSearch()
     }
   })
 })
+
+function handleInitSearch() {
+  // 优先使用传入的参数
+  if (pageOptions.keyword) {
+    keyword.value = pageOptions.keyword
+    // 如果 keyword 在分类里，也高亮分类
+    if (categories.includes(pageOptions.keyword)) {
+      currentCategory.value = pageOptions.keyword
+    }
+    doSearch()
+  } else if (pageOptions.category) {
+    searchCategory(pageOptions.category)
+  } else {
+    // 默认搜索医院
+    searchCategory('医院')
+  }
+}
 
 // 搜索分类
 function searchCategory(category) {

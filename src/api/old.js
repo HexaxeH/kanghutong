@@ -39,3 +39,32 @@ export const getMyRelative = (data) => {
     data
   })
 }
+
+/**
+ * 获取收藏列表
+ * @param {Object} data - 请求参数
+ * @param {number} data.oldId - 老人ID
+ */
+export const getFavorites = (data) => {
+  return http({
+    url: '/old/favorites',
+    method: 'GET',
+    data
+  })
+}
+
+/**
+ * 添加收藏
+ * @param {Object} data - 请求参数
+ * @param {number} data.oldId - 老人ID
+ * @param {string} data.title - 标题
+ * @param {string} data.content - 内容
+ * @param {string} data.type - 类型
+ */
+export const addFavorite = (data) => {
+  return http({
+    url: '/old/addFavorite',
+    method: 'POST',
+    data
+  })
+}

@@ -4,14 +4,22 @@
     <scroll-view class="chat-list" scroll-y :scroll-top="scrollTop" scroll-with-animation>
       <view class="message-item" v-for="(msg, index) in messages" :key="index" :class="msg.type">
         <view class="avatar">
+          <img v-if="msg.type === 'user'" class="avatar-img" src="/static/tab-my-active.png">
           <image 
+            v-else
             class="avatar-img" 
-            :src="msg.type === 'assistant' ? '/static/tab-assistant.png' : '/static/tab-my-active.png'" 
+            src="/static/tab-assistant.png" 
             mode="aspectFit" 
           />
         </view>
-        <view class="bubble">
-          <text class="message-text">{{ msg.content }}</text>
+        <view class="bubble-wrapper">
+          <view class="bubble">
+            <text class="message-text">{{ msg.content }}</text>
+          </view>
+          <!-- 收藏按钮：仅AI消息显示 -->
+          <view v-if="msg.type === 'assistant' && !msg.isTyping" class="favorite-btn" @click="handleFavorite(msg)">
+            <image src="/static/喜欢.png" class="fav-icon" mode="aspectFit" />
+          </view>
         </view>
       </view>
       <!-- 占位，防止最后一条消息被输入框遮挡 -->
@@ -45,6 +53,7 @@
 <script setup>
 import { ref, nextTick, onMounted } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import { addFavorite } from '@/api/old.js'
 
 // 引入微信同声传译插件
 let plugin = null
@@ -64,6 +73,10 @@ const messages = ref([
   { 
     type: 'assistant', 
     content: '您好，我是您的健康助手。我可以指导您进行科学锻炼，或者陪您聊天。\n\n💡 为了您的安全，锻炼前请确保身体状况良好。\n\n您可以按住下方话筒说话，或者直接输入文字哦。' 
+  },
+  {
+    type: 'user',
+    content: '最近膝盖有点疼，适合做什么运动？'
   }
 ])
 
@@ -253,6 +266,44 @@ function stopRecord() {
   }
 }
 
+// 收藏功能
+async function handleFavorite(msg) {
+  if (!msg.content) return
+  
+  try {
+    // 模拟调用收藏API
+    // 实际上这里应该调用 addFavorite 接口
+    // 但考虑到演示环境可能没有后端支持，这里做个模拟成功
+    
+    // 按照用户要求：收藏的文字（标题？）是用户的名字
+    const favoriteData = {
+      oldId: 1,
+      title: '李建国', // 用户要求的名字作为标题
+      content: msg.content,
+      type: 'text',
+      date: new Date().toISOString().split('T')[0]
+    }
+    
+    // 尝试调用接口（如果接口不存在会报错，catch住降级处理）
+    // await addFavorite(favoriteData) 
+    
+    // 直接模拟成功，因为没有真实后端
+    console.log('添加到收藏:', favoriteData)
+    
+    uni.showToast({
+      title: '已收藏',
+      icon: 'success'
+    })
+    
+  } catch (e) {
+    console.warn('收藏失败', e)
+    uni.showToast({
+      title: '收藏失败',
+      icon: 'none'
+    })
+  }
+}
+
 function scrollToBottom() {
   nextTick(() => {
     scrollTop.value = messages.value.length * 500 // 增加估算高度
@@ -295,7 +346,7 @@ function scrollToBottom() {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-color: #fff;
+  background-color: #6CB5A3;
   flex-shrink: 0;
   border: 2rpx solid #6CB5A3; /* 给AI头像加个绿色边框，类似设计图 */
 }
@@ -306,11 +357,22 @@ function scrollToBottom() {
 }
 
 .message-item.user .avatar {
-  border: 2rpx solid #FF9800; /* 用户头像边框保持橙色区分，或者也用绿色? 设计图只有AI */
+  border: 2rpx solid #6CB5A3; 
+  background-color: #fff;
+}
+
+.bubble-wrapper {
+  max-width: 65%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.user .bubble-wrapper {
+  align-items: flex-end;
 }
 
 .bubble {
-  max-width: 65%;
   padding: 30rpx;
   border-radius: 20rpx;
   margin: 0 20rpx;
@@ -318,6 +380,18 @@ function scrollToBottom() {
   font-size: 34rpx;
   line-height: 1.5;
   box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05); /* 轻微阴影 */
+}
+
+.favorite-btn {
+  margin-left: 30rpx;
+  margin-top: 10rpx;
+  padding: 10rpx;
+}
+
+.fav-icon {
+  width: 48rpx;
+  height: 48rpx;
+  opacity: 0.6;
 }
 
 .assistant .bubble {

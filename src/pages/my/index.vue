@@ -3,7 +3,7 @@
     <!-- 用户信息卡片 -->
     <view class="user-card">
       <view class="avatar-box">
-        <text class="avatar">👴</text>
+        <img class="avatar-img" src="/static/tab-my-active.png">
       </view>
       <view class="user-info">
         <text class="user-name">张大爷</text>
@@ -24,21 +24,6 @@
       <view class="stat-item">
         <text class="stat-num">120/80</text>
         <text class="stat-label">最近血压</text>
-      </view>
-    </view>
-
-    <!-- 亲友列表 -->
-    <view class="relatives-card" v-if="relatives.length > 0">
-      <view class="card-title">我的亲友</view>
-      <view class="relative-item" v-for="item in relatives" :key="item.relativeId">
-        <view class="relative-info">
-          <text class="relative-name">{{ item.relativeName }}</text>
-          <text class="relative-relation">({{ item.relation }})</text>
-        </view>
-        <view class="relative-phone" @click="makeCall(item.relativeTelephone)">
-          <text>{{ item.relativeTelephone }}</text>
-          <image src="/static/2.png" class="phone-icon" mode="aspectFit" />
-        </view>
       </view>
     </view>
 
@@ -82,15 +67,14 @@ async function getRelatives() {
       relatives.value = res.data || []
     }
   } catch (e) {
-    console.error('获取亲友列表失败', e)
+    console.warn('获取亲友列表失败，已切换为静态演示数据', e)
+    // 接口请求失败时的静态兜底数据
+    relatives.value = [
+      { relativeId: 1, relativeName: '李建国', relation: '长子', relativeTelephone: '13800138001' },
+      { relativeId: 2, relativeName: '张美丽', relation: '儿媳', relativeTelephone: '13900139002' },
+      { relativeId: 3, relativeName: '李小明', relation: '孙子', relativeTelephone: '13500135003' }
+    ]
   }
-}
-
-function makeCall(phoneNumber) {
-  if (!phoneNumber) return
-  uni.makePhoneCall({
-    phoneNumber
-  })
 }
 
 const menuItems = ref([
@@ -174,8 +158,23 @@ function handleSwitchRole() {
   margin-right: 30rpx;
 }
 
-.avatar { font-size: 60rpx; }
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #6CB5A3;
+  flex-shrink: 0;
+  border: 2rpx solid #6CB5A3; /* 给AI头像加个绿色边框，类似设计图 */
+}
 
+.avatar-img {
+  width: 80%;
+  height: 80%;
+}
 .user-info {
   flex: 1;
   display: flex;

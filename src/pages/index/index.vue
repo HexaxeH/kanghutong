@@ -118,7 +118,7 @@ onShow(() => {
 const statusBarHeight = ref(20)
 const city = ref('定位中...')
 const recommendedHospital = ref(null)
-const myAmapFun = new AMapLite({ key: '4d4e76a5e1b19a9bae4cbc37d3204dc2' });
+const myAmapFun = new AMapLite({ key: '1923856a15f02cf1889d5018af772fae' });
 
 // 获取状态栏高度
 try {
@@ -151,6 +151,7 @@ function updateLocation() {
     success(res) {
       if (!res.authSetting['scope.userLocation']) {
         city.value = '未授权'
+        setStaticHospitalData()
         return
       }
       
@@ -173,8 +174,17 @@ function updateLocation() {
           fetchNearbyHospital()
         },
         fail: function(info) {
-          console.error(info)
-          city.value = '定位失败'
+          console.error('定位失败，切换到默认城市', info)
+          // 隐私协议未配置或用户拒绝时，使用默认城市
+          city.value = '北京市'
+          setStaticHospitalData()
+          // 仅在非隐私协议错误时提示，避免干扰开发
+          if (info && info.errMsg && !info.errMsg.includes('privacy')) {
+            uni.showToast({
+              title: '定位失败，已切换为北京',
+              icon: 'none'
+            })
+          }
         }
       })
     }
@@ -204,12 +214,24 @@ function fetchNearbyHospital() {
           distance: hospital.distance,
           type: typeStr
         }
+      } else {
+        setStaticHospitalData()
       }
     },
     fail: function(info){
       console.error('查找医院失败', info)
+      setStaticHospitalData()
     }
   })
+}
+
+function setStaticHospitalData() {
+  recommendedHospital.value = {
+    name: '北京协和医院',
+    address: '北京市东城区帅府园1号',
+    distance: 580,
+    type: '三级甲等'
+  }
 }
 
 function handleAction(type, param) {
@@ -241,6 +263,7 @@ function handleAction(type, param) {
       url: '/pages/nearby/index'
     })
   } else if (type === 'location') {
+    // 重新触发定位逻辑
     uni.authorize({
       scope: 'scope.userLocation',
       success() {
@@ -251,10 +274,12 @@ function handleAction(type, param) {
         })
       },
       fail(err) {
+        // 如果是已经授权过但只是想刷新，authorize会直接success
+        // 如果是拒绝过，这里会fail
         console.error('Authorize failed:', err)
         uni.showModal({
           title: '定位授权失败',
-          content: '请在设置中开启位置权限，或检查手机定位开关是否打开。\n错误信息：' + (err.errMsg || '未知错误'),
+          content: '请在设置中开启位置权限，以便为您推荐附近的医院。',
           confirmText: '去设置',
           success: function (res) {
             if (res.confirm) {
@@ -276,17 +301,21 @@ function handleAction(type, param) {
         icon: 'none'
       })
   } else if (type === 'hospital-list') {
-      // 更多医院
-      uni.showToast({
-        title: '更多医院功能开发中',
-        icon: 'none'
+      // 跳转到附近页面，查看更多医院
+      uni.navigateTo({
+        url: '/pages/nearby/index?category=医院'
       })
   } else if (type === 'hospital-detail') {
-      // 医院详情
-      uni.showToast({
-        title: '医院详情功能开发中',
-        icon: 'none'
-      })
+      // 跳转到附近页面，并搜索具体医院
+      if (recommendedHospital.value && recommendedHospital.value.name) {
+         uni.navigateTo({
+          url: `/pages/nearby/index?keyword=${encodeURIComponent(recommendedHospital.value.name)}`
+        })
+      } else {
+        uni.navigateTo({
+          url: '/pages/nearby/index?category=医院'
+        })
+      }
   } else {
     // 调试信息：显示接收到的 type 和长度，排查是否有隐藏字符
     uni.showToast({

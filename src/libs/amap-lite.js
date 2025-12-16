@@ -24,10 +24,23 @@ class AMapLite {
     if (a.location) {
       run(a.location)
     } else {
-      uni.getLocation({
-        type: 'gcj02',
-        success: (pos) => run(`${pos.longitude},${pos.latitude}`),
-        fail: (err) => a.fail({ errCode: '0', errMsg: err.errMsg || '' })
+      uni.authorize({
+        scope: 'scope.userLocation',
+        success: () => {
+          uni.getLocation({
+            type: 'gcj02',
+            success: (pos) => run(`${pos.longitude},${pos.latitude}`),
+            fail: (err) => a.fail({ errCode: '0', errMsg: err.errMsg || '' })
+          })
+        },
+        fail: (err) => {
+          // 尝试直接调用，因为可能已经授权过
+          uni.getLocation({
+            type: 'gcj02',
+            success: (pos) => run(`${pos.longitude},${pos.latitude}`),
+            fail: (err) => a.fail({ errCode: '0', errMsg: err.errMsg || '' })
+          })
+        }
       })
     }
   }
@@ -70,10 +83,22 @@ class AMapLite {
     if (a.location) {
       run(a.location)
     } else {
-      uni.getLocation({
-        type: 'gcj02',
-        success: (pos) => run(`${pos.longitude},${pos.latitude}`),
-        fail: (err) => a.fail({ errCode: '0', errMsg: err.errMsg || '' })
+      uni.authorize({
+        scope: 'scope.userLocation',
+        success: () => {
+          uni.getLocation({
+            type: 'gcj02',
+            success: (pos) => run(`${pos.longitude},${pos.latitude}`),
+            fail: (err) => a.fail({ errCode: '0', errMsg: err.errMsg || '' })
+          })
+        },
+        fail: (err) => {
+          uni.getLocation({
+            type: 'gcj02',
+            success: (pos) => run(`${pos.longitude},${pos.latitude}`),
+            fail: (err) => a.fail({ errCode: '0', errMsg: err.errMsg || '' })
+          })
+        }
       })
     }
   }

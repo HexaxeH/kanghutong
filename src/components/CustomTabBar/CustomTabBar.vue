@@ -133,8 +133,8 @@ function switchTab(item, index) {
 }
 
 .special-icon {
-  width: 80rpx;
-  height: 80rpx;
+  width: 120rpx;
+  height: 120rpx;
   /* 确保图标变为纯白色 */
   filter: brightness(0) invert(1);
 }

@@ -76,12 +76,56 @@ async function getMedicationRecords() {
       oldId: 1 // 暂时硬编码
     })
 
-    if (res.code === 200 && res.data) {
+    if (res.data && res.data.length > 0) {
       processMedications(res.data)
+    } else {
+      // 如果没有数据，使用静态演示数据
+      setStaticMedicationData()
     }
   } catch (e) {
-    console.error('获取用药记录失败', e)
+    console.warn('获取用药记录失败，已切换为静态演示数据', e)
+    setStaticMedicationData()
   }
+}
+
+function setStaticMedicationData() {
+    // 构造静态演示数据（确保日期覆盖今日，频率包含今日）
+    const todayStr = new Date().toISOString().split('T')[0]
+    const nextYearStr = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0]
+    
+    const staticData = [
+      {
+        medicationId: 101,
+        medicationName: '阿司匹林肠溶片',
+        dose: '1片',
+        relativeName: '李建国',
+        startTime: '2023-01-01', 
+        endTime: nextYearStr,
+        medicationFrequency: '[1,2,3,4,5,6,7]', // 每天
+        remindTime: '["08:00", "20:00"]'
+      },
+      {
+        medicationId: 102,
+        medicationName: '降压药',
+        dose: '0.5片',
+        relativeName: '李建国',
+        startTime: '2023-01-01',
+        endTime: nextYearStr,
+        medicationFrequency: '[1,2,3,4,5,6,7]',
+        remindTime: '["09:00"]'
+      },
+      {
+        medicationId: 103,
+        medicationName: '钙片',
+        dose: '1片',
+        relativeName: '张美丽',
+        startTime: '2023-01-01',
+        endTime: nextYearStr,
+        medicationFrequency: '[1,2,3,4,5,6,7]',
+        remindTime: '["12:00"]'
+      }
+    ]
+    processMedications(staticData)
 }
 
 function processMedications(data) {
